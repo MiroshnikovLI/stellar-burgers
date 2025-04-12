@@ -2,20 +2,52 @@ import { FC, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useSelector } from 'react-redux';
+import { selectAllIngredients } from '../slices/ingredientsSlice';
+import { selectAllOrders, selectUserOrders } from '../slices/feedSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from '../../services/store';
+import { fetchOrderNumber } from '../slices/orderSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
+  const orderAll = useSelector(selectAllOrders);
+
+  const orderUser = useSelector(selectUserOrders);
+
+  const dispatch = useDispatch();
+
+  const orderNumber = useParams();
+
+  let orderData = {
     createdAt: '',
-    ingredients: [],
+    ingredients: [''],
     _id: '',
     status: '',
     name: '',
-    updatedAt: 'string',
+    updatedAt: '',
     number: 0
   };
 
-  const ingredients: TIngredient[] = [];
+  if (orderNumber) {
+    orderAll.forEach((ele) => {
+      if (ele.number === Number(orderNumber.number)) {
+        console.log('click');
+
+        return (orderData = ele);
+      }
+    });
+
+    orderUser.forEach((ele) => {
+      if (ele.number === Number(orderNumber.number)) {
+        return (orderData = ele);
+      }
+    });
+
+    dispatch(fetchOrderNumber(Number(orderNumber.number)));
+  }
+
+  const ingredients: TIngredient[] = useSelector(selectAllIngredients);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
