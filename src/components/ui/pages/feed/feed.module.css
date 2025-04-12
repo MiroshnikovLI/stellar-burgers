@@ -29,6 +29,23 @@
 
 .columnInfo {
   overflow-y: auto;
+  scrollbar-width: auto;
+  scrollbar-color: auto;
   overflow-x: hidden;
   width: 580px;
+}
+
+.commonButton {
+  padding: 20px;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  transition: none;
+}
+
+.commonButton:focus-visible {
+  outline: 1px solid #fff;
+}
+
+.commonButton:hover {
+  background-color: #2f2f37;
 }
