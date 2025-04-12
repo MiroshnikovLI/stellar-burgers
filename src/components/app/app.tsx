@@ -15,7 +15,6 @@ const App: FC = () => {
 
   useEffect(() => {
     dispatch(fetchIngredients());
-    dispatch(fetchFeed());
     dispatch(checkUserAuth());
   }, [dispatch]);
 

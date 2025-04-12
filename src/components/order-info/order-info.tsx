@@ -2,11 +2,10 @@ import { FC, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector } from 'react-redux';
 import { selectAllIngredients } from '../slices/ingredientsSlice';
 import { selectAllOrders, selectUserOrders } from '../slices/feedSlice';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { fetchOrderNumber } from '../slices/orderSlice';
 
 export const OrderInfo: FC = () => {

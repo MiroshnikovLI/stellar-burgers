@@ -16,14 +16,44 @@ export const fetchUser = createAsyncThunk('user/fetch', getUserApi);
 
 export const loginUser = createAsyncThunk(
   'user/login',
-  async (data: TLoginData) => loginUserApi(data)
+  async (data: TLoginData, { rejectWithValue }) => {
+    try {
+      const response = await loginUserApi(data);
+      localStorage.setItem('refreshToken', response.refreshToken);
+      setCookie('accessToken', response.accessToken);
+      return response;
+    } catch (error) {
+      return rejectWithValue('Указан неверный email или пароль');
+    }
+  }
 );
 
-export const logoutUser = createAsyncThunk('user/logout', logoutApi);
+export const logoutUser = createAsyncThunk(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await logoutApi();
+      deleteCookie('accessToken');
+      localStorage.clear();
+      return response;
+    } catch (error) {
+      return rejectWithValue('Ошибка регистрации');
+    }
+  }
+);
 
 export const registerUser = createAsyncThunk(
   'user/register',
-  async (data: TRegisterData) => registerUserApi(data)
+  async (data: TRegisterData, { rejectWithValue }) => {
+    try {
+      const response = await registerUserApi(data);
+      localStorage.setItem('refreshToken', response.refreshToken);
+      setCookie('accessToken', response.accessToken);
+      return response;
+    } catch (error) {
+      return rejectWithValue('Ошибка регистрации');
+    }
+  }
 );
 
 export const checkUserAuth = createAsyncThunk(
@@ -41,7 +71,13 @@ export const checkUserAuth = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'user/update',
-  async (data: Partial<TRegisterData>) => updateUserApi(data)
+  async (data: Partial<TRegisterData>, { rejectWithValue }) => {
+    try {
+      return await updateUserApi(data);
+    } catch (error) {
+      return rejectWithValue('Ошибка обновления данных');
+    }
+  }
 );
 
 const initialState: UserState = {
@@ -93,8 +129,6 @@ export const userSlice = createSlice({
         state.isAuthChecked = true;
         state.isLoading = false;
         state.errorBanner = true;
-        if (action.error?.message)
-          state.error = 'Указан неверный адрес электронной почты или пароль';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isAuthChecked = true;
@@ -102,8 +136,6 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.errorBanner = false;
         state.user = action.payload.user;
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
-        setCookie('accessToken', action.payload.accessToken);
       })
       .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
@@ -111,8 +143,6 @@ export const userSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
         state.errorBanner = true;
-        deleteCookie('accessToken');
-        localStorage.clear();
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
@@ -120,8 +150,6 @@ export const userSlice = createSlice({
         state.success = false;
         state.user = null;
         state.errorBanner = false;
-        deleteCookie('accessToken');
-        localStorage.clear();
       })
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
@@ -138,8 +166,6 @@ export const userSlice = createSlice({
         state.errorBanner = false;
         state.success = action.payload.success;
         state.user = action.payload.user;
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
-        setCookie('accessToken', action.payload.accessToken);
       })
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;

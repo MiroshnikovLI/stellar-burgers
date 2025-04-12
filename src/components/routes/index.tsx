@@ -8,7 +8,7 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Feed } from '../../pages/feed/feed';
 import { IngredientDetails } from '../ingredient-details';
 import { Modal } from '../modal';
@@ -18,13 +18,14 @@ import { ClearBurger } from '../clear-burger';
 
 export const AppRoutes = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const backgroundLocation = location.state?.background;
 
   const orderNumber = location.state?.orderNumber;
 
   const closeModal = () => {
-    history.back();
+    navigate(-1);
   };
 
   return (
@@ -82,30 +83,68 @@ export const AppRoutes = () => {
         <Route path='*' element={<NotFound404 />} />
         <Route
           path='/forgot-password'
-          element={<OnlyUnAuth component={<ForgotPassword />} />}
+          element={
+            <OnlyUnAuth>
+              <ForgotPassword />
+            </OnlyUnAuth>
+          }
         />
         <Route
           path='/reset-password'
-          element={<OnlyUnAuth component={<ResetPassword />} />}
+          element={
+            <OnlyUnAuth>
+              <ResetPassword />
+            </OnlyUnAuth>
+          }
         />
 
         <Route
           path='/profile/orders/:number'
-          element={<OnlyAuth component={<OrderInfo />} />}
+          element={
+            <OnlyAuth>
+              <OrderInfo />
+            </OnlyAuth>
+          }
         />
-        <Route path='/login' element={<OnlyUnAuth component={<Login />} />} />
+        <Route
+          path='/login'
+          element={
+            <OnlyUnAuth>
+              <Login />
+            </OnlyUnAuth>
+          }
+        />
         <Route
           path='/register'
-          element={<OnlyUnAuth component={<Register />} />}
+          element={
+            <OnlyUnAuth>
+              <Register />
+            </OnlyUnAuth>
+          }
         />
         <Route
           path='/forgot-password'
-          element={<OnlyAuth component={<ResetPassword />} />}
+          element={
+            <OnlyAuth>
+              <ResetPassword />
+            </OnlyAuth>
+          }
         />
-        <Route path='/profile' element={<OnlyAuth component={<Profile />} />} />
+        <Route
+          path='/profile'
+          element={
+            <OnlyAuth>
+              <Profile />
+            </OnlyAuth>
+          }
+        />
         <Route
           path='/profile/orders'
-          element={<OnlyAuth component={<ProfileOrders />} />}
+          element={
+            <OnlyAuth>
+              <ProfileOrders />
+            </OnlyAuth>
+          }
         />
       </Routes>
     </>

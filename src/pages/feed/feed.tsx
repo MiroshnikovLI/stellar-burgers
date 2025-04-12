@@ -25,6 +25,7 @@ export const Feed: FC = () => {
   const error = useSelector(selectFeedError);
 
   useEffect(() => {
+    dispatch(fetchFeed());
     if (error) {
       setisMounted(true);
     }

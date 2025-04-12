@@ -16,7 +16,7 @@ const initialState: IngredientsState = {
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchAll',
-  async () => getIngredientsApi()
+  getIngredientsApi
 );
 
 export const ingredientsSlice = createSlice({
@@ -32,7 +32,11 @@ export const ingredientsSlice = createSlice({
     selectIngredientsLoading: (state) => state.isLoading,
     selectIngredientsError: (state) => state.error,
     selectBuns: (state) =>
-      state.ingredients.filter((item) => item.type === 'bun')
+      state.ingredients.filter((item) => item.type === 'bun'),
+    selectMains: (state) =>
+      state.ingredients.filter((item) => item.type === 'main'),
+    selectSauces: (state) =>
+      state.ingredients.filter((item) => item.type === 'sauce')
   },
   extraReducers: (builder) => {
     builder
@@ -58,5 +62,7 @@ export const {
   selectAllIngredients,
   selectIngredientsLoading,
   selectIngredientsError,
-  selectBuns
+  selectBuns,
+  selectMains,
+  selectSauces
 } = ingredientsSlice.selectors;

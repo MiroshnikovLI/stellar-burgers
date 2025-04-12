@@ -1,20 +1,20 @@
-import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router';
 import {
   selectUser,
   selectAuthChecked
 } from '../../../components/slices/userProfileSlice';
 import { Preloader } from '@ui';
+import { useSelector } from '../../../services/store';
 
 type IProtectedRouteProfile = {
   onlyUnAuth?: boolean;
-  component: JSX.Element;
+  component: React.ReactElement;
 };
 
 const ProtectedRouteProfile = ({
   onlyUnAuth = false,
   component
-}: IProtectedRouteProfile): JSX.Element => {
+}: IProtectedRouteProfile): React.ReactElement => {
   const user = useSelector(selectUser);
   const isAuthChecked = useSelector(selectAuthChecked);
   const location = useLocation();
@@ -32,10 +32,12 @@ const ProtectedRouteProfile = ({
     return <Navigate to={from} />;
   }
 
-  return component;
+  return <>{component}</>;
 };
 
-export const OnlyAuth = ProtectedRouteProfile;
-export const OnlyUnAuth = ({ component }: { component: JSX.Element }) => (
-  <ProtectedRouteProfile onlyUnAuth component={component} />
-);
+export const OnlyAuth: React.FC<{ children: React.ReactElement }> = ({
+  children
+}) => <ProtectedRouteProfile component={children} />;
+export const OnlyUnAuth: React.FC<{ children: React.ReactElement }> = ({
+  children
+}) => <ProtectedRouteProfile onlyUnAuth component={children} />;

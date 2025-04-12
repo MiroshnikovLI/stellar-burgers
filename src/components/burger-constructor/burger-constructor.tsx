@@ -1,12 +1,11 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useSelector } from 'react-redux';
 import {
   clearConstructor,
   selectConstructorItems
 } from '../slices/burgerConstructorSlice/tindex';
-import { useDispatch } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
 import { selectUser } from '../slices/userProfileSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -41,6 +40,7 @@ export const BurgerConstructor: FC = () => {
         burger.push(ele._id);
       });
 
+      burger.push(constructorItems.bun._id);
       burger.push(constructorItems.bun._id);
 
       dispatch(createOrder(burger));
