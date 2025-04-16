@@ -7,14 +7,12 @@ import {
 import { burgerConstructorSlice } from '../components/slices/burgerConstructorSlice/tindex';
 import { feedSlice } from '../components/slices/feedSlice';
 import { ingredientsSlice } from '../components/slices/ingredientsSlice';
-import { orderSlice } from '../components/slices/orderSlice';
 import { userSlice } from '../components/slices/userProfileSlice';
 
 const rootReducer = combineSlices(
   burgerConstructorSlice,
   feedSlice,
   ingredientsSlice,
-  orderSlice,
   userSlice
 );
 

@@ -1,24 +1,23 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { selectAllIngredients } from '../slices/ingredientsSlice';
-import { selectAllOrders, selectUserOrders } from '../slices/feedSlice';
+import {
+  fetchOrderNumber,
+  selectAllOrders,
+  selectUserOrders
+} from '../slices/feedSlice';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
-import { fetchOrderNumber } from '../slices/orderSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
   const orderAll = useSelector(selectAllOrders);
-
   const orderUser = useSelector(selectUserOrders);
-
   const dispatch = useDispatch();
-
   const orderNumber = useParams();
-
-  let orderData = {
+  const [orderData, setOrderData] = useState({
     createdAt: '',
     ingredients: [''],
     _id: '',
@@ -26,24 +25,28 @@ export const OrderInfo: FC = () => {
     name: '',
     updatedAt: '',
     number: 0
-  };
+  });
 
-  if (orderNumber) {
+  if (!orderData?.number) {
     orderAll.forEach((ele) => {
       if (ele.number === Number(orderNumber.number)) {
-        console.log('click');
-
-        return (orderData = ele);
+        return setOrderData(ele);
       }
     });
 
     orderUser.forEach((ele) => {
       if (ele.number === Number(orderNumber.number)) {
-        return (orderData = ele);
+        return setOrderData(ele);
       }
     });
 
-    dispatch(fetchOrderNumber(Number(orderNumber.number)));
+    dispatch(fetchOrderNumber(Number(orderNumber.number)))
+      .unwrap()
+      .then((data) => {
+        if (data) {
+          setOrderData(data.orders[0]);
+        }
+      });
   }
 
   const ingredients: TIngredient[] = useSelector(selectAllIngredients);

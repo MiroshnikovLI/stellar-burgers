@@ -1,13 +1,10 @@
 import '../../index.css';
 import styles from './app.module.css';
-
 import { AppHeader } from '@components';
 import { AppRoutes } from '../routes';
-
 import { FC, useEffect } from 'react';
 import { fetchIngredients } from '../slices/ingredientsSlice';
 import { useDispatch } from '../../services/store';
-import { fetchFeed } from '../slices/feedSlice';
 import { checkUserAuth } from '../slices/userProfileSlice';
 
 const App: FC = () => {

@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getFeedsApi, getOrdersApi, orderBurgerApi } from '@api';
+import {
+  getFeedsApi,
+  getOrderByNumberApi,
+  getOrdersApi,
+  orderBurgerApi
+} from '@api';
 import { IInitialState } from './type';
 
 const initialState: IInitialState = {
@@ -28,6 +33,19 @@ export const fetchUserOrders = createAsyncThunk(
 export const createOrder = createAsyncThunk(
   'feed/createOrder',
   async (ingredients: string[]) => orderBurgerApi(ingredients)
+);
+
+export const fetchOrderNumber = createAsyncThunk(
+  'order/getOrderNumber',
+  async (data: number) => {
+    try {
+      const response = await getOrderByNumberApi(data);
+      if (!response.success) {
+        throw new Error(response.success || 'Failed to fetch order');
+      }
+      return response;
+    } catch {}
+  }
 );
 
 export const feedSlice = createSlice({
