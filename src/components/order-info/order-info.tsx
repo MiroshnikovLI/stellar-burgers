@@ -27,6 +27,9 @@ export const OrderInfo: FC = () => {
     number: 0
   });
 
+  console.log(orderNumber, 'orderNumver');
+  console.log(orderNumber.number, 'orderNumver.number');
+
   if (!orderData?.number) {
     orderAll.forEach((ele) => {
       if (ele.number === Number(orderNumber.number)) {

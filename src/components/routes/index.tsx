@@ -8,13 +8,21 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { Feed } from '../../pages/feed/feed';
 import { IngredientDetails } from '../ingredient-details';
 import { Modal } from '../modal';
 import { OrderInfo } from '../order-info';
 import { OnlyAuth, OnlyUnAuth } from './protected-route';
 import { ClearBurger } from '../clear-burger';
+import styles from './routes.module.css';
 
 export const AppRoutes = () => {
   const location = useLocation();
@@ -22,7 +30,9 @@ export const AppRoutes = () => {
 
   const backgroundLocation = location.state?.background;
 
-  const orderNumber = location.state?.orderNumber;
+  const profileMatch = useMatch('/profile/orders/:number')?.params.number;
+  const feedMatch = useMatch('/feed/:number')?.params.number;
+  const orderNumber = profileMatch || feedMatch;
 
   const closeModal = () => {
     navigate(-1);
@@ -47,7 +57,7 @@ export const AppRoutes = () => {
             element={
               <Modal
                 onClose={closeModal}
-                title={`Информация о заказе ${orderNumber}`}
+                title={`Информация о заказе #${orderNumber && orderNumber.padStart(6, '0')}`}
                 children={<OrderInfo />}
               />
             }
@@ -56,7 +66,7 @@ export const AppRoutes = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={`Информация о заказе ${orderNumber}`}
+                title={`Информация о заказе #${orderNumber && orderNumber.padStart(6, '0')}`}
                 onClose={closeModal}
                 children={<OrderInfo />}
               />
@@ -79,7 +89,19 @@ export const AppRoutes = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
-        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route
+          path='/feed/:number'
+          element={
+            <div className={styles.detailPageWrap}>
+              <p
+                className={`text text_type_digits-default ${styles.detailHeader}`}
+              >
+                #{orderNumber && orderNumber.padStart(6, '0')}
+              </p>
+              <OrderInfo />
+            </div>
+          }
+        />
         <Route path='*' element={<NotFound404 />} />
         <Route
           path='/forgot-password'
