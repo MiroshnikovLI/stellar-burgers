@@ -7,7 +7,7 @@ import {
 } from '@api';
 import { IInitialState } from './type';
 
-const initialState: IInitialState = {
+export const initialState: IInitialState = {
   feed: {
     orders: [],
     total: 0,

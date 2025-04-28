@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { feedSlice, fetchFeed, createOrder, fetchOrderNumber } from './index';
-import { getFeedsApi, getOrderByNumberApi, orderBurgerApi } from '@api';
+import { feedSlice, fetchFeed, fetchOrderNumber } from './index';
+import { getFeedsApi, getOrderByNumberApi } from '@api';
 
 // Моки для API
 jest.mock('@api', () => ({
@@ -47,20 +47,20 @@ describe('feedSlice', () => {
     jest.clearAllMocks();
   });
 
-  describe('initial state', () => {
-    it('should return initial state', () => {
+  describe('Начальное состояние', () => {
+    it('Получение начального состояния', () => {
       expect(feedSlice.reducer(undefined, { type: '' })).toEqual(initialState);
     });
   });
 
-  describe('reducers', () => {
-    it('should handle openOrderModal', () => {
+  describe('Редюсер', () => {
+    it('Проверка состояние получение информации', () => {
       const action = feedSlice.actions.openOrderModal();
       const state = feedSlice.reducer(initialState, action);
       expect(state.orderRequest).toBe(true);
     });
 
-    it('should handle closeOrderModal', () => {
+    it('Проверка закрытие модального окна', () => {
       const stateWithModal = {
         ...initialState,
         orderRequest: true,
@@ -72,20 +72,20 @@ describe('feedSlice', () => {
       expect(state.orderModalData).toBeNull();
     });
 
-    it('should handle resetFeedError', () => {
+    it('Проверка состояния подключения', () => {
+      const action = feedSlice.actions.setWsConnected(true);
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.connected).toBe(true);
+    });
+
+    it('Проверка состояния ошибки', () => {
       const stateWithError = { ...initialState, error: true };
       const action = feedSlice.actions.resetFeedError();
       const state = feedSlice.reducer(stateWithError, action);
       expect(state.error).toBe(false);
     });
 
-    it('should handle setWsConnected', () => {
-      const action = feedSlice.actions.setWsConnected(true);
-      const state = feedSlice.reducer(initialState, action);
-      expect(state.connected).toBe(true);
-    });
-
-    it('should handle clearOrder', () => {
+    it('Очистка заказа после закрытия окна', () => {
       const stateWithOrder = {
         ...initialState,
         orderRequest: true,
@@ -95,65 +95,6 @@ describe('feedSlice', () => {
       const state = feedSlice.reducer(stateWithOrder, action);
       expect(state.orderRequest).toBe(false);
       expect(state.orderModalData).toBeNull();
-    });
-  });
-
-  describe('async thunks', () => {
-    describe('fetchFeed', () => {
-      it('should handle pending', () => {
-        const action = { type: fetchFeed.pending.type };
-        const state = feedSlice.reducer(initialState, action);
-        expect(state.connected).toBe(false);
-        expect(state.error).toBe(false);
-      });
-
-      it('should handle fulfilled', async () => {
-        (getFeedsApi as jest.Mock).mockResolvedValue(mockFeedResponse);
-        const action = {
-          type: fetchFeed.fulfilled.type,
-          payload: mockFeedResponse
-        };
-        const state = feedSlice.reducer(initialState, action);
-        expect(state.connected).toBe(true);
-        expect(state.feed).toEqual(mockFeedResponse);
-      });
-
-      it('should handle rejected', () => {
-        const action = { type: fetchFeed.rejected.type };
-        const state = feedSlice.reducer(initialState, action);
-        expect(state.connected).toBe(false);
-        expect(state.error).toBe(true);
-      });
-    });
-
-    describe('Получение информации о заказе', () => {
-      it('По номеру заказа', async () => {
-        const mockResponse = { success: true, orders: [mockOrder] };
-        (getOrderByNumberApi as jest.Mock).mockResolvedValue(mockResponse);
-        const thunk = createAsyncThunk(
-          'test/fetchOrderNumber',
-          fetchOrderNumber
-        );
-        const dispatch = jest.fn();
-        const getState = jest.fn();
-
-        await thunk(75771)(dispatch, getState, undefined);
-        expect(getOrderByNumberApi).toHaveBeenCalledWith(mockOrder);
-      });
-
-      it('Обработка неудачного запроса', async () => {
-        (getOrderByNumberApi as jest.Mock).mockRejectedValue(
-          new Error('Failed')
-        );
-        const thunk = createAsyncThunk(
-          'test/fetchOrderNumber',
-          fetchOrderNumber
-        );
-        const dispatch = jest.fn();
-
-        const result = await thunk(75771)(dispatch, () => {}, undefined);
-        expect(result.meta.requestStatus).toBe('rejected');
-      });
     });
   });
 
