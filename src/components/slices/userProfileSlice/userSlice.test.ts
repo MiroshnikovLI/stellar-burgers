@@ -1,12 +1,4 @@
-import {
-  userSlice,
-  fetchUser,
-  loginUser,
-  logoutUser,
-  registerUser,
-  updateUser,
-  fetchUserOrders
-} from './index';
+import { userSlice } from './index';
 
 describe('userSlice', () => {
   const initialState = {

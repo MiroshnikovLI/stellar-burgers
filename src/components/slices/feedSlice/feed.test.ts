@@ -1,6 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { feedSlice, fetchFeed, fetchOrderNumber } from './index';
-import { getFeedsApi, getOrderByNumberApi } from '@api';
+import { feedSlice } from './index';
 
 // Моки для API
 jest.mock('@api', () => ({
