@@ -22,11 +22,7 @@ export const fetchIngredients = createAsyncThunk(
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    clearIngredientsError: (state) => {
-      state.error = null;
-    }
-  },
+  reducers: {},
   selectors: {
     selectAllIngredients: (state) => state.ingredients,
     selectIngredientsLoading: (state) => state.isLoading,
@@ -55,8 +51,6 @@ export const ingredientsSlice = createSlice({
       });
   }
 });
-
-export const { clearIngredientsError } = ingredientsSlice.actions;
 
 export const {
   selectAllIngredients,

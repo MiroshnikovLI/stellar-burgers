@@ -1,4 +1,5 @@
 import {
+  getOrdersApi,
   getUserApi,
   loginUserApi,
   logoutApi,
@@ -80,13 +81,19 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const fetchUserOrders = createAsyncThunk(
+  'feed/fetchUserOrders',
+  async () => getOrdersApi()
+);
+
 const initialState: UserState = {
   user: null,
   error: '',
   isAuthChecked: false,
   success: false,
   isLoading: false,
-  errorBanner: false
+  errorBanner: false,
+  userOrders: []
 };
 
 export const userSlice = createSlice({
@@ -103,6 +110,14 @@ export const userSlice = createSlice({
       state.error = '';
     },
     resetUserState: () => initialState
+  },
+  selectors: {
+    selectUserOrders: (state) => state.userOrders,
+    selectUser: (state) => state.user,
+    selectAuthChecked: (state) => state.isAuthChecked,
+    selectAuthError: (state) => state.error,
+    selectAuthLoading: (state) => state.isLoading,
+    selectErrorBanner: (state) => state.errorBanner
   },
   extraReducers: (builder) => {
     builder
@@ -170,25 +185,35 @@ export const userSlice = createSlice({
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(updateUser.rejected, (state, action) => {})
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.errorBanner = false;
         state.success = action.payload.success;
         state.user = action.payload.user;
+      })
+      .addCase(fetchUserOrders.pending, (state) => {
+        state.isLoading = true;
+        state.errorBanner = false;
+      })
+      .addCase(fetchUserOrders.rejected, (state) => {
+        state.isLoading = false;
+        state.errorBanner = true;
+      })
+      .addCase(fetchUserOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userOrders = action.payload;
       });
   }
 });
 
-// Селекторы
-export const selectUser = (state: { user: UserState }) => state.user.user;
-export const selectAuthChecked = (state: { user: UserState }) =>
-  state.user.isAuthChecked;
-export const selectAuthError = (state: { user: UserState }) => state.user.error;
-export const selectAuthLoading = (state: { user: UserState }) =>
-  state.user.isLoading;
-export const selectErrorBanner = (state: { user: UserState }) =>
-  state.user.errorBanner;
+export const {
+  selectUserOrders,
+  selectUser,
+  selectAuthChecked,
+  selectAuthError,
+  selectAuthLoading,
+  selectErrorBanner
+} = userSlice.selectors;
 
 export const { setAuthChecked, setUser, clearError, resetUserState } =
   userSlice.actions;

@@ -204,4 +204,10 @@ const config = {
   // watchman: true,
 };
 
-module.exports = config;
+module.exports = {
+  moduleNameMapper: {
+    '^@api/(.*)$': '<rootDir>/src/utils/burger-api',
+    '^@api$': '<rootDir>/src/utils/burger-api'
+  },
+  config
+};

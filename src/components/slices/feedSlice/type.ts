@@ -8,7 +8,6 @@ export interface IInitialState {
   };
   orderRequest: boolean;
   orderModalData: TOrder | null;
-  userOrders: TOrder[];
   connected: boolean;
   error: boolean;
   isLoading: boolean;

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useDispatch } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 import { ClearBurgerUI } from '../ui/clear-burger';
-import { clearConstructor } from '../slices/burgerConstructorSlice/tindex';
+import { clearConstructor } from '../slices/burgerConstructorSlice';
 
 export const ClearBurger: FC = () => {
   const dispatch = useDispatch();

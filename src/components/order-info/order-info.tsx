@@ -3,13 +3,10 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { selectAllIngredients } from '../slices/ingredientsSlice';
-import {
-  fetchOrderNumber,
-  selectAllOrders,
-  selectUserOrders
-} from '../slices/feedSlice';
+import { fetchOrderNumber, selectAllOrders } from '../slices/feedSlice';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
+import { selectUserOrders } from '../slices/userProfileSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
@@ -26,9 +23,6 @@ export const OrderInfo: FC = () => {
     updatedAt: '',
     number: 0
   });
-
-  console.log(orderNumber, 'orderNumver');
-  console.log(orderNumber.number, 'orderNumver.number');
 
   if (!orderData?.number) {
     orderAll.forEach((ele) => {

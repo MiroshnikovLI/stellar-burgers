@@ -1,17 +1,15 @@
 import { ProfileOrdersUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
-import {
-  fetchUserOrders,
-  selectWsConnected,
-  selectUserOrders
-} from '../../components/slices/feedSlice';
+import { selectWsConnected } from '../../components/slices/feedSlice';
 import { useDispatch, useSelector } from '../../services/store';
 import { Preloader } from '@ui';
 import { ErrorBanner } from '../../components/error-banner';
 import {
+  fetchUserOrders,
   selectAuthError,
-  selectAuthLoading
+  selectAuthLoading,
+  selectUserOrders
 } from '../../components/slices/userProfileSlice';
 
 export const ProfileOrders: FC = () => {

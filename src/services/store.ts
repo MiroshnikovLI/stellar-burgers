@@ -4,7 +4,7 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import { burgerConstructorSlice } from '../components/slices/burgerConstructorSlice/tindex';
+import { burgerConstructorSlice } from '../components/slices/burgerConstructorSlice';
 import { feedSlice } from '../components/slices/feedSlice';
 import { ingredientsSlice } from '../components/slices/ingredientsSlice';
 import { userSlice } from '../components/slices/userProfileSlice';

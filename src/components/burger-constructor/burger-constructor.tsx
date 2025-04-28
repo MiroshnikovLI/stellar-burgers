@@ -4,7 +4,7 @@ import { BurgerConstructorUI } from '@ui';
 import {
   clearConstructor,
   selectConstructorItems
-} from '../slices/burgerConstructorSlice/tindex';
+} from '../slices/burgerConstructorSlice';
 import { useDispatch, useSelector } from '../../services/store';
 import { selectUser } from '../slices/userProfileSlice';
 import { useLocation, useNavigate } from 'react-router-dom';

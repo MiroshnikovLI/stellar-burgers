@@ -15,7 +15,7 @@ export const ProfileOrdersUI: FC<ProfileOrdersUIProps> = ({
       <ProfileMenu />
     </div>
     <div className={`mt-10 ${styles.orders}`}>
-      {!loading ? (
+      {loading ? (
         <div className={styles.emptyOrders}>
           <Preloader />
         </div>

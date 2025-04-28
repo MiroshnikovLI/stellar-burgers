@@ -13,7 +13,6 @@ const initialState: IInitialState = {
     total: 0,
     totalToday: 0
   },
-  userOrders: [],
   orderRequest: false,
   orderModalData: null,
   connected: false,
@@ -23,11 +22,6 @@ const initialState: IInitialState = {
 
 export const fetchFeed = createAsyncThunk('feed/fetchAll', async () =>
   getFeedsApi()
-);
-
-export const fetchUserOrders = createAsyncThunk(
-  'feed/fetchUserOrders',
-  async () => getOrdersApi()
 );
 
 export const createOrder = createAsyncThunk(
@@ -74,7 +68,6 @@ export const feedSlice = createSlice({
   },
   selectors: {
     selectFeed: (state) => state.feed,
-    selectUserOrders: (state) => state.userOrders,
     selectOrderRequest: (state) => state.orderRequest,
     selectOrderModalData: (state) => state.orderModalData,
     selectWsConnected: (state) => state.connected,
@@ -95,18 +88,6 @@ export const feedSlice = createSlice({
       .addCase(fetchFeed.fulfilled, (state, action) => {
         state.connected = true;
         state.feed = action.payload;
-      })
-      .addCase(fetchUserOrders.pending, (state) => {
-        state.connected = false;
-        state.error = false;
-      })
-      .addCase(fetchUserOrders.rejected, (state) => {
-        state.connected = true;
-        state.error = true;
-      })
-      .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.connected = true;
-        state.userOrders = action.payload;
       })
       .addCase(createOrder.pending, (state) => {
         state.connected = false;
@@ -133,7 +114,6 @@ export const {
 
 export const {
   selectFeed,
-  selectUserOrders,
   selectOrderRequest,
   selectOrderModalData,
   selectWsConnected,
