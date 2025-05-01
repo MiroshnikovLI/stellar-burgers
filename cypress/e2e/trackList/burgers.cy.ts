@@ -1,10 +1,9 @@
 // <reference types="cypress" />
+// cypress/plugins/index.js
 
 describe('Burger Bar Tests', () => {
   const userName = 'Miroshnikov-li@yandex.ru';
   const userPassword = 'miron147963den';
-
-  const baseUrl = 'http://localhost:4000';
 
   const constructor = '[data-cy="constructor-element-test"]';
 
@@ -19,7 +18,7 @@ describe('Burger Bar Tests', () => {
     );
     cy.setCookie('accessToken', 'test-accessToken');
 
-    cy.visit(baseUrl);
+    cy.visit('/');
 
     /** Бургер конструктор */
     cy.get(constructor).as('burger');
@@ -65,9 +64,9 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Mixing goods in the burger constructor', () => {
-    cy.visit(baseUrl);
-
     let initialPosition: JQuery.Coordinates;
+
+    cy.visit('/');
 
     /** Бургер конструктор */
     cy.get(constructor).as('burger');
@@ -98,8 +97,7 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Removing an item from the constructor', () => {
-    cy.visit(baseUrl);
-
+    cy.visit('/');
     /** Бургер конструктор */
     cy.get(constructor).as('burger');
 
@@ -147,8 +145,7 @@ describe('Burger Bar Tests', () => {
   });
 
   it('The button for clearing the constructor', () => {
-    cy.visit(baseUrl);
-
+    cy.visit('/');
     /** Бургер конструктор */
     cy.get(constructor).as('burger');
 
@@ -185,16 +182,14 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Opening the modal window of the product', () => {
-    cy.visit(baseUrl);
-
+    cy.visit('/');
     /** Клик на ингредиент */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
     cy.url().should('include', '/ingredients/643d69a5c3f7b9001cfa093d');
   });
 
-  it('Закрытие модального окна изделия', () => {
-    cy.visit(baseUrl);
-
+  it('Closing the modal window of the product', () => {
+    cy.visit('/');
     /** Клик на ингредиент */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
     cy.get(`[data-cy='modal-test']`)
