@@ -7,6 +7,15 @@ describe('Burger Bar Tests', () => {
 
   const constructor = '[data-cy="constructor-element-test"]';
 
+  const bun = '[data-cy="643d69a5c3f7b9001cfa093d"]';
+  const ingredients1 = `[data-cy="643d69a5c3f7b9001cfa0941"]`;
+  const ingredients2 = `[data-cy="643d69a5c3f7b9001cfa093e"]`;
+  const ingredients3 = `[data-cy="643d69a5c3f7b9001cfa0946"]`;
+
+  const deleteElement = '[data-cy="delete-element-test"]';
+
+  const modalTest = `[data-cy='modal-test']`;
+
   it('Making an order', () => {
     cy.intercept('POST', '/', { fixture: 'ingredients.json' });
     cy.intercept('GET', '/api/auth/user', { fixture: 'login' });
@@ -24,9 +33,9 @@ describe('Burger Bar Tests', () => {
     cy.get(constructor).as('burger');
 
     /** Добавляем ингредиенты */
-    cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').find('button').click();
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa093e"]`).find('button').click();
+    cy.get(bun).find('button').click();
+    cy.get(ingredients1).find('button').click();
+    cy.get(ingredients2).find('button').click();
 
     /** Кнопка оформить заказ, оформление заказа  */
     cy.get(`button`).contains('Оформить заказ').click();
@@ -35,17 +44,12 @@ describe('Burger Bar Tests', () => {
     cy.wait('@order').then((interception) => {
       // Проверяем тело запроса
       expect(interception.request.body).to.deep.equal({
-        ingredients: [
-          '643d69a5c3f7b9001cfa0941',
-          '643d69a5c3f7b9001cfa093e',
-          '643d69a5c3f7b9001cfa093d',
-          '643d69a5c3f7b9001cfa093d'
-        ]
+        ingredients: [ingredients1, ingredients2, bun, bun]
       });
     });
 
     /** Модальное окно */
-    cy.get(`[data-cy='modal-test']`).as('modal');
+    cy.get(modalTest).as('modal');
 
     /** Проверка окна оформление заказа */
     cy.get('@modal').contains('Оформляем заказ');
@@ -72,17 +76,17 @@ describe('Burger Bar Tests', () => {
     cy.get(constructor).as('burger');
 
     /** Добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
+    cy.get(ingredients1).find('button').click();
 
     /** КДобавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa093e"]`).find('button').click();
+    cy.get(ingredients2).find('button').click();
 
     /** Добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0946"]`).find('button').click();
+    cy.get(ingredients3).find('button').click();
 
     /** Елемент внутри бургера */
     cy.get('@burger')
-      .find('[data-cy="643d69a5c3f7b9001cfa0941"]')
+      .find(ingredients1)
       .then(($burger) => {
         initialPosition = $burger.position();
       })
@@ -102,42 +106,36 @@ describe('Burger Bar Tests', () => {
     cy.get(constructor).as('burger');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0941"]`)
-      .should('exist');
+    cy.get(ingredients1).find('button').click();
+    cy.get('@burger').get(ingredients1).should('exist');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa093e"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa093e"]`)
-      .should('exist');
+    cy.get(ingredients2).find('button').click();
+    cy.get('@burger').get(ingredients2).should('exist');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0946"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0946"]`)
-      .should('exist');
+    cy.get(ingredients3).find('button').click();
+    cy.get('@burger').get(ingredients3).should('exist');
 
     /** Елемент внутри бургера */
     cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0941"]`)
-      .find('[data-cy="delete-element-test"]')
+      .get(ingredients1)
+      .find(deleteElement)
       .find('svg')
       .last()
       .click()
       .should('not.exist');
 
     cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa093e"]`)
-      .find('[data-cy="delete-element-test"]')
+      .get(ingredients2)
+      .find(deleteElement)
       .find('svg')
       .last()
       .click()
       .should('not.exist');
     cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0946"]`)
-      .find('[data-cy="delete-element-test"]')
+      .get(ingredients3)
+      .find(deleteElement)
       .find('svg')
       .last()
       .click()
@@ -150,33 +148,25 @@ describe('Burger Bar Tests', () => {
     cy.get(constructor).as('burger');
 
     /** Кнопка булки, добавления булки */
-    cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa093d"]`)
-      .should('exist');
+    cy.get(bun).find('button').click();
+    cy.get('@burger').get(bun).should('exist');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0941"]`)
-      .should('exist');
+    cy.get(ingredients1).find('button').click();
+    cy.get('@burger').get(ingredients1).should('exist');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa093e"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa093e"]`)
-      .should('exist');
+    cy.get(ingredients2).find('button').click();
+    cy.get('@burger').get(ingredients2).should('exist');
 
     /** Кнопка ингредиента, добавления ингредиента  */
-    cy.get(`[data-cy="643d69a5c3f7b9001cfa0946"]`).find('button').click();
-    cy.get('@burger')
-      .get(`[data-cy="643d69a5c3f7b9001cfa0946"]`)
-      .should('exist');
+    cy.get(ingredients3).find('button').click();
+    cy.get('@burger').get(ingredients3).should('exist');
 
     /** Очистка бургера */
     cy.get('@burger').get(`[data-cy='constructor-clear-test']`).click();
 
-    cy.get(`[data-cy='modal-test']`).find('button').contains('Да').click();
+    cy.get(modalTest).find('button').contains('Да').click();
 
     cy.get('@burger').contains('Выберите начинку');
   });
@@ -184,15 +174,15 @@ describe('Burger Bar Tests', () => {
   it('Opening the modal window of the product', () => {
     cy.visit('/');
     /** Клик на ингредиент */
-    cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
+    cy.get(bun).click();
     cy.url().should('include', '/ingredients/643d69a5c3f7b9001cfa093d');
   });
 
   it('Closing the modal window of the product', () => {
     cy.visit('/');
     /** Клик на ингредиент */
-    cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
-    cy.get(`[data-cy='modal-test']`)
+    cy.get(bun).click();
+    cy.get(modalTest)
       .as('modal')
       .within(() => {
         cy.contains('Детали ингредиента');
