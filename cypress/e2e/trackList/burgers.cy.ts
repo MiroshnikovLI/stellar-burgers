@@ -4,6 +4,10 @@ describe('Burger Bar Tests', () => {
   const userName = 'Miroshnikov-li@yandex.ru';
   const userPassword = 'miron147963den';
 
+  const baseUrl = 'http://localhost:4000';
+
+  const constructor = '[data-cy="constructor-element-test"]';
+
   it('Making an order', () => {
     cy.intercept('POST', '/', { fixture: 'ingredients.json' });
     cy.intercept('GET', '/api/auth/user', { fixture: 'login' });
@@ -15,10 +19,10 @@ describe('Burger Bar Tests', () => {
     );
     cy.setCookie('accessToken', 'test-accessToken');
 
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     /** Бургер конструктор */
-    cy.get(`[data-cy="constructor-element-test"]`).as('burger');
+    cy.get(constructor).as('burger');
 
     /** Добавляем ингредиенты */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').find('button').click();
@@ -61,12 +65,12 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Mixing goods in the burger constructor', () => {
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     let initialPosition: JQuery.Coordinates;
 
     /** Бургер конструктор */
-    cy.get('[data-cy="constructor-element-test"]').as('burger');
+    cy.get(constructor).as('burger');
 
     /** Добавления ингредиента  */
     cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
@@ -94,10 +98,10 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Removing an item from the constructor', () => {
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     /** Бургер конструктор */
-    cy.get('[data-cy="constructor-element-test"]').as('burger');
+    cy.get(constructor).as('burger');
 
     /** Кнопка ингредиента, добавления ингредиента  */
     cy.get(`[data-cy="643d69a5c3f7b9001cfa0941"]`).find('button').click();
@@ -143,10 +147,10 @@ describe('Burger Bar Tests', () => {
   });
 
   it('The button for clearing the constructor', () => {
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     /** Бургер конструктор */
-    cy.get('[data-cy="constructor-element-test"]').as('burger');
+    cy.get(constructor).as('burger');
 
     /** Кнопка булки, добавления булки */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').find('button').click();
@@ -181,7 +185,7 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Opening the modal window of the product', () => {
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     /** Клик на ингредиент */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
@@ -189,7 +193,7 @@ describe('Burger Bar Tests', () => {
   });
 
   it('Закрытие модального окна изделия', () => {
-    cy.visit('http://localhost:4000');
+    cy.visit(baseUrl);
 
     /** Клик на ингредиент */
     cy.get('[data-cy="643d69a5c3f7b9001cfa093d"]').click();
