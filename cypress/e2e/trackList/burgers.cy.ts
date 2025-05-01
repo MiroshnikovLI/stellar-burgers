@@ -19,7 +19,7 @@ describe('Burger Bar Tests', () => {
   it('Making an order', () => {
     cy.intercept('POST', '/', { fixture: 'ingredients.json' });
     cy.intercept('GET', '/api/auth/user', { fixture: 'login' });
-    cy.intercept('POST', '/api/orders', { fixture: 'order.json' }).as('order');
+    cy.intercept('POST', '/api/orders', { fixture: 'orders.json' }).as('order');
 
     window.localStorage.setItem(
       'refreshToken',
@@ -44,7 +44,12 @@ describe('Burger Bar Tests', () => {
     cy.wait('@order').then((interception) => {
       // Проверяем тело запроса
       expect(interception.request.body).to.deep.equal({
-        ingredients: [ingredients1, ingredients2, bun, bun]
+        ingredients: [
+          '643d69a5c3f7b9001cfa0941',
+          '643d69a5c3f7b9001cfa093e',
+          '643d69a5c3f7b9001cfa093d',
+          '643d69a5c3f7b9001cfa093d'
+        ]
       });
     });
 
@@ -55,10 +60,10 @@ describe('Burger Bar Tests', () => {
     cy.get('@modal').contains('Оформляем заказ');
 
     /** Проверка окна заказ оформлен */
-    cy.get('@modal').contains('Заказ оформлен', { timeout: 20000 });
+    cy.get('@modal').contains('Заказ оформлен');
 
     /** Кнопка закрытия модального окна заказа */
-    cy.get('[data-cy="modal-close-test"]', { timeout: 2000 }).click();
+    cy.get('[data-cy="modal-close-test"]').click();
 
     /** Проверка конструктора бургера что он пуст */
     cy.get('@burger').within(() => {
@@ -175,7 +180,10 @@ describe('Burger Bar Tests', () => {
     cy.visit('/');
     /** Клик на ингредиент */
     cy.get(bun).click();
-    cy.url().should('include', '/ingredients/643d69a5c3f7b9001cfa093d');
+    cy.get(modalTest).within(() => {
+      cy.contains('Детали ингредиента');
+      cy.contains('Флюоресцентная булка R2-D3');
+    });
   });
 
   it('Closing the modal window of the product', () => {
