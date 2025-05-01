@@ -183,6 +183,10 @@ const config = {
         // настройки для ts-jest
       }
     ]
+  },
+  moduleNameMapper: {
+    '^@api/(.*)$': '<rootDir>/src/utils/burger-api',
+    '^@api$': '<rootDir>/src/utils/burger-api'
   }
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -204,10 +208,4 @@ const config = {
   // watchman: true,
 };
 
-module.exports = {
-  moduleNameMapper: {
-    '^@api/(.*)$': '<rootDir>/src/utils/burger-api',
-    '^@api$': '<rootDir>/src/utils/burger-api'
-  },
-  config
-};
+export default config;

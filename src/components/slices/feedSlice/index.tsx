@@ -20,9 +20,7 @@ export const initialState: IInitialState = {
   isLoading: false
 };
 
-export const fetchFeed = createAsyncThunk('feed/fetchAll', async () =>
-  getFeedsApi()
-);
+export const fetchFeed = createAsyncThunk('feed/fetchAll', getFeedsApi);
 
 export const createOrder = createAsyncThunk(
   'feed/createOrder',
@@ -52,9 +50,6 @@ export const feedSlice = createSlice({
     closeOrderModal: (state) => {
       state.orderRequest = false;
       state.orderModalData = null;
-    },
-    resetFeedError: (state) => {
-      state.error = false;
     },
     setWsConnected: (state, action) => {
       state.connected = action.payload;
@@ -104,13 +99,8 @@ export const feedSlice = createSlice({
   }
 });
 
-export const {
-  openOrderModal,
-  closeOrderModal,
-  resetFeedError,
-  setWsConnected,
-  clearOrder
-} = feedSlice.actions;
+export const { openOrderModal, closeOrderModal, setWsConnected, clearOrder } =
+  feedSlice.actions;
 
 export const {
   selectFeed,

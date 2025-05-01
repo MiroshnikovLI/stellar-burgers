@@ -12,6 +12,7 @@
     "@types/uuid": "^9.0.1",
     "@zlden/react-developer-burger-ui-components": "^1.15.0",
     "clsx": "^2.0.0",
+    "jest": "^29.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.5",
@@ -69,7 +70,6 @@
     "eslint-webpack-plugin": "^4.0.1",
     "fetch-mock": "^9.11.0",
     "html-webpack-plugin": "^5.6.0",
-    "jest": "^29.7.0",
     "jest-css-modules-transform": "^4.4.2",
     "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^23.0.1",
@@ -93,8 +93,8 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
-    "test": "jest --verbose",
-    "cypress:open": "cypress open"
+    "test": "jest --coverage --verbose",
+    "cypress": "cypress open"
   },
   "eslintConfig": {
     "extends": [

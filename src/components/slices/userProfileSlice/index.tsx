@@ -86,7 +86,7 @@ export const fetchUserOrders = createAsyncThunk(
   async () => getOrdersApi()
 );
 
-const initialState: UserState = {
+export const initialState: UserState = {
   user: null,
   error: '',
   isAuthChecked: false,
@@ -108,8 +108,7 @@ export const userSlice = createSlice({
     },
     clearError: (state) => {
       state.error = '';
-    },
-    resetUserState: () => initialState
+    }
   },
   selectors: {
     selectUserOrders: (state) => state.userOrders,
@@ -215,5 +214,4 @@ export const {
   selectErrorBanner
 } = userSlice.selectors;
 
-export const { setAuthChecked, setUser, clearError, resetUserState } =
-  userSlice.actions;
+export const { setAuthChecked, setUser, clearError } = userSlice.actions;

@@ -1,38 +1,14 @@
-import { feedSlice } from './index';
-
-// Моки для API
-jest.mock('@api', () => ({
-  getFeedsApi: jest.fn(),
-  orderBurgerApi: jest.fn(),
-  getOrderByNumberApi: jest.fn()
-}));
+import { feedSlice, fetchFeed, createOrder, initialState } from './index';
 
 describe('feedSlice', () => {
-  const initialState = {
-    feed: {
-      orders: [],
-      total: 0,
-      totalToday: 0
-    },
-    orderRequest: false,
-    orderModalData: null,
-    connected: false,
-    error: false,
-    isLoading: false
-  };
-
   const mockOrder = {
-    _id: '680f3e15e8e61d001cec4f04',
-    ingredients: [
-      '643d69a5c3f7b9001cfa093d',
-      '643d69a5c3f7b9001cfa093d',
-      '643d69a5c3f7b9001cfa0940'
-    ],
+    _id: '1',
+    ingredients: ['ing1', 'ing2'],
     status: 'done',
-    name: 'Флюоресцентный метеоритный бургер',
-    createdAt: '2025-04-28T08:36:37.955Z',
-    updatedAt: '2025-04-28T08:36:38.757Z',
-    number: 75771
+    name: 'Test Order',
+    number: 1234,
+    createdAt: '2023-01-01',
+    updatedAt: '2023-01-01'
   };
 
   const mockFeedResponse = {
@@ -41,24 +17,19 @@ describe('feedSlice', () => {
     totalToday: 1
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
+  it('get the initial state', () => {
+    const result = feedSlice.reducer(undefined, { type: '' });
+    expect(result).toEqual(initialState);
   });
 
-  describe('Начальное состояние', () => {
-    it('Получение начального состояния', () => {
-      expect(feedSlice.reducer(undefined, { type: '' })).toEqual(initialState);
-    });
-  });
-
-  describe('Редюсер', () => {
-    it('Проверка состояние получение информации', () => {
+  describe('reducers', () => {
+    it('Opening the modal order window', () => {
       const action = feedSlice.actions.openOrderModal();
       const state = feedSlice.reducer(initialState, action);
       expect(state.orderRequest).toBe(true);
     });
 
-    it('Проверка закрытие модального окна', () => {
+    it('Closing the modal order window', () => {
       const stateWithModal = {
         ...initialState,
         orderRequest: true,
@@ -70,33 +41,83 @@ describe('feedSlice', () => {
       expect(state.orderModalData).toBeNull();
     });
 
-    it('Проверка состояния подключения', () => {
+    it('Checking the connection', () => {
       const action = feedSlice.actions.setWsConnected(true);
       const state = feedSlice.reducer(initialState, action);
       expect(state.connected).toBe(true);
     });
 
-    it('Проверка состояния ошибки', () => {
-      const stateWithError = { ...initialState, error: true };
-      const action = feedSlice.actions.resetFeedError();
-      const state = feedSlice.reducer(stateWithError, action);
-      expect(state.error).toBe(false);
-    });
-
-    it('Очистка заказа после закрытия окна', () => {
+    it('Checking the order clearance when receiving a response from the server', () => {
       const stateWithOrder = {
         ...initialState,
-        orderRequest: true,
-        orderModalData: mockOrder
+        orderModalData: mockOrder,
+        orderRequest: true
       };
       const action = feedSlice.actions.clearOrder();
       const state = feedSlice.reducer(stateWithOrder, action);
       expect(state.orderRequest).toBe(false);
       expect(state.orderModalData).toBeNull();
     });
+
+    it('Checking the order clearance without receiving a response from the server', () => {
+      const action = feedSlice.actions.clearOrder();
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.orderRequest).toBe(false);
+    });
   });
 
-  describe('Селекторы', () => {
+  describe('extraReducers', () => {
+    it('Preparing to send the request', () => {
+      const action = { type: fetchFeed.pending.type };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.connected).toBe(false);
+      expect(state.error).toBe(false);
+    });
+
+    it('Error handling check', () => {
+      const action = { type: fetchFeed.rejected.type };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.connected).toBe(false);
+      expect(state.error).toBe(true);
+    });
+
+    it('Verification of successful request processing', () => {
+      const action = {
+        type: fetchFeed.fulfilled.type,
+        payload: mockFeedResponse
+      };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.connected).toBe(true);
+      expect(state.feed).toEqual(mockFeedResponse);
+      expect(state.error).toBe(false);
+    });
+
+    it('Preparing to send the request', () => {
+      const action = { type: createOrder.pending.type };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.connected).toBe(false);
+      expect(state.error).toBe(false);
+    });
+
+    it('Error handling check', () => {
+      const action = { type: createOrder.rejected.type };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.error).toBe(true);
+    });
+
+    it('Verification of successful request processing', () => {
+      const action = {
+        type: createOrder.fulfilled.type,
+        payload: { order: mockOrder }
+      };
+      const state = feedSlice.reducer(initialState, action);
+      expect(state.orderRequest).toBe(true);
+      expect(state.connected).toBe(true);
+      expect(state.orderModalData).toEqual(mockOrder);
+    });
+  });
+
+  describe('selectors', () => {
     const testState = {
       feed: {
         feed: mockFeedResponse,
@@ -108,35 +129,29 @@ describe('feedSlice', () => {
       }
     };
 
-    it('Получение информации заказов', () => {
-      expect(feedSlice.selectors.selectFeed(testState)).toEqual(
-        mockFeedResponse
-      );
-    });
-
-    it('Получение статуса заказа', () => {
+    it('selectOrderRequest should return request status', () => {
       expect(feedSlice.selectors.selectOrderRequest(testState)).toBe(true);
     });
 
-    it('Получение информации о заказе', () => {
+    it('Getting data about the modal order window', () => {
       expect(feedSlice.selectors.selectOrderModalData(testState)).toEqual(
         mockOrder
       );
     });
 
-    it('Получить информацию о статусе подключения', () => {
+    it('Checking the connection status', () => {
       expect(feedSlice.selectors.selectWsConnected(testState)).toBe(true);
     });
 
-    it('Получение статуса ошибки', () => {
+    it('Checking the error status', () => {
       expect(feedSlice.selectors.selectFeedError(testState)).toBe(false);
     });
 
-    it('Получение статуса загрузки', () => {
+    it('Checking the download status', () => {
       expect(feedSlice.selectors.selectFeedLoading(testState)).toBe(false);
     });
 
-    it('Получение информации всех заказов', () => {
+    it('Verification receipt of all order data', () => {
       expect(feedSlice.selectors.selectAllOrders(testState)).toEqual([
         mockOrder
       ]);

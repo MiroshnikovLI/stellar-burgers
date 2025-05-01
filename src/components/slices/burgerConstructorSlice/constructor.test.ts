@@ -1,12 +1,7 @@
-import { burgerConstructorSlice } from './index';
+import { burgerConstructorSlice, initialState } from './index';
 import { nanoid } from '@reduxjs/toolkit';
 
 describe('burgerConstructorSlice', () => {
-  const initialState = {
-    bun: null,
-    ingredients: []
-  };
-
   const mockBun = {
     _id: '643d69a5c3f7b9001cfa093c',
     id: '0',
@@ -42,14 +37,13 @@ describe('burgerConstructorSlice', () => {
   const id2 = nanoid();
   const id3 = nanoid();
 
-  it('Получить начальное состояние', () => {
-    expect(burgerConstructorSlice.reducer(undefined, { type: '' })).toEqual(
-      initialState
-    );
+  it('get the initial state', () => {
+    const result = burgerConstructorSlice.reducer(undefined, { type: '' });
+    expect(result).toEqual(initialState);
   });
 
-  describe('Добавления', () => {
-    it('Добавление булки', () => {
+  describe('Additions', () => {
+    it('Adding bun', () => {
       const action = {
         type: burgerConstructorSlice.actions.addIngredient.type,
         payload: mockBun
@@ -60,7 +54,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toHaveLength(0);
     });
 
-    it('Добавление ингредиентов', () => {
+    it('Adding ingredients', () => {
       const action = {
         type: burgerConstructorSlice.actions.addIngredient.type,
         payload: { ...mockIngredient, id: nanoid() }
@@ -71,7 +65,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toContainEqual(action.payload);
     });
 
-    it('Добавление ингредиентов и булки', () => {
+    it('Adding ingredients and bun', () => {
       const bunWithId = mockBun;
       const actionAddBun = {
         type: burgerConstructorSlice.actions.addIngredient.type,
@@ -101,8 +95,8 @@ describe('burgerConstructorSlice', () => {
     });
   });
 
-  describe('Удаление ингридиентов', () => {
-    it('Удаление одного ингредиента', () => {
+  describe('Removing ingredients', () => {
+    it('Removing one ingredient', () => {
       const stateWithIngredients = {
         bun: null,
         ingredients: [{ ...mockIngredient, id: id1 }]
@@ -120,7 +114,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toHaveLength(0);
     });
 
-    it('Удаление второго ингредиента из трёх', () => {
+    it('Removing the second ingredient from the three', () => {
       const stateWithIngredients = {
         bun: null,
         ingredients: [
@@ -143,7 +137,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients[1].id).toBe(id3);
     });
 
-    it('Удаление третьего ингредиента из трёх', () => {
+    it('Removing the third ingredient from the three', () => {
       const stateWithIngredients = {
         bun: null,
         ingredients: [
@@ -167,8 +161,8 @@ describe('burgerConstructorSlice', () => {
     });
   });
 
-  describe('Переместить ингредиент', () => {
-    it('Переместить ингредиент вниз', () => {
+  describe('Move an ingredient', () => {
+    it('Move the ingredient down', () => {
       const state = {
         bun: null,
         ingredients: [
@@ -187,7 +181,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients[1].id).toBe(id1);
     });
 
-    it('Переместить ингредиент вверх', () => {
+    it('Move the ingredient up', () => {
       const state = {
         bun: null,
         ingredients: [
@@ -206,7 +200,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients[1].id).toBe(id1);
     });
 
-    it('Только один элемент', () => {
+    it('Only one element', () => {
       const state = {
         bun: null,
         ingredients: [{ ...mockIngredient, id: id1 }]
@@ -222,8 +216,8 @@ describe('burgerConstructorSlice', () => {
     });
   });
 
-  describe('Очистить конструктор', () => {
-    it('Очистить конструктор при завершение оформление заказа заказа ', () => {
+  describe('Clear the constructor', () => {
+    it('Clear the constructor when completing the order', () => {
       const state = {
         bun: mockBun,
         ingredients: [{ ...mockIngredient, id: nanoid() }]
@@ -239,7 +233,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toHaveLength(0);
     });
 
-    it('Очистка конструктора во время ожидания оформления заказа', () => {
+    it('Clearing the constructor while waiting for an order to be placed', () => {
       const state = {
         bun: mockBun,
         ingredients: [{ ...mockIngredient, id: id1 }]
@@ -255,7 +249,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toEqual(state.ingredients);
     });
 
-    it('Очистка конструктора при добавление только булки', () => {
+    it('Clearing the constructor when adding only bread rolls', () => {
       const state = {
         bun: mockBun,
         ingredients: []
@@ -271,7 +265,7 @@ describe('burgerConstructorSlice', () => {
       expect(result.ingredients).toHaveLength(0);
     });
 
-    it('Очистка конструктора при добавление только ингредиентов', () => {
+    it('Clearing the constructor when adding only ingredients', () => {
       const state = {
         bun: null,
         ingredients: [{ ...mockIngredient, id: id1 }]
@@ -288,8 +282,8 @@ describe('burgerConstructorSlice', () => {
     });
   });
 
-  describe('Элементы', () => {
-    it('Показать все элементы', () => {
+  describe('Elements', () => {
+    it('Show all the elements', () => {
       const state = {
         burgerConstructor: {
           bun: mockBun,

@@ -1,12 +1,6 @@
-import { ingredientsSlice } from './index';
+import { ingredientsSlice, initialState } from './index';
 
 describe('ingredientsSlice', () => {
-  const initialState = {
-    ingredients: [],
-    isLoading: false,
-    error: null
-  };
-
   const mockIngredients = [
     {
       _id: '643d69a5c3f7b9001cfa093c',
@@ -52,15 +46,14 @@ describe('ingredientsSlice', () => {
     }
   ];
 
-  describe('Начальное состояние', () => {
-    it('Получение начального состояния', () => {
-      expect(ingredientsSlice.reducer(undefined, { type: '' })).toEqual(
-        initialState
-      );
+  describe('Initial state', () => {
+    it('Getting the initial state', () => {
+      const result = ingredientsSlice.reducer(undefined, { type: '' });
+      expect(result).toEqual(initialState);
     });
   });
 
-  describe('Селекторы', () => {
+  describe('Selectors', () => {
     const testState = {
       ingredients: {
         ingredients: mockIngredients,
@@ -69,36 +62,36 @@ describe('ingredientsSlice', () => {
       }
     };
 
-    it('Получение всех ингредиентов', () => {
+    it('Getting all the ingredients', () => {
       const result = ingredientsSlice.selectors.selectAllIngredients(testState);
       expect(result).toEqual(mockIngredients);
     });
 
-    it('Получение статуса загрузки', () => {
+    it('Getting the download status', () => {
       const result =
         ingredientsSlice.selectors.selectIngredientsLoading(testState);
       expect(result).toBe(false);
     });
 
-    it('Получение информации об ошибки', () => {
+    it('Getting information about an error', () => {
       const result =
         ingredientsSlice.selectors.selectIngredientsError(testState);
       expect(result).toBeNull();
     });
 
-    it('Получение ингредиентов булка', () => {
+    it('Getting the ingredients of the bun', () => {
       const result = ingredientsSlice.selectors.selectBuns(testState);
       expect(result).toEqual([mockIngredients[0]]);
       expect(result.every((item) => item.type === 'bun')).toBe(true);
     });
 
-    it('Получение ингредиентов начинка', () => {
+    it('Getting the ingredients filling', () => {
       const result = ingredientsSlice.selectors.selectMains(testState);
       expect(result).toEqual([mockIngredients[1]]);
       expect(result.every((item) => item.type === 'main')).toBe(true);
     });
 
-    it('Получение ингредиентов соусы', () => {
+    it('Getting ingredients sauces', () => {
       const result = ingredientsSlice.selectors.selectSauces(testState);
       expect(result).toEqual([mockIngredients[2]]);
       expect(result.every((item) => item.type === 'sauce')).toBe(true);

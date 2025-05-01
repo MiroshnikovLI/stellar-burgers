@@ -22,9 +22,15 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   onOrderClick,
   closeOrderModal
 }) => (
-  <section className={styles.burger_constructor}>
+  <section
+    className={styles.burger_constructor}
+    data-cy='constructor-element-test'
+  >
     {constructorItems.bun ? (
-      <div className={`${styles.element} mb-4 mr-4`}>
+      <div
+        className={`${styles.element} mb-4 mr-4`}
+        data-cy={constructorItems.bun._id}
+      >
         <ConstructorElement
           type='top'
           isLocked
@@ -105,6 +111,7 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         })}
         to='/clear-burger'
         state={{ background: locationState, modal: true }}
+        data-cy='constructor-clear-test'
       >
         <span className='constructor-element__action pr-2'>
           <svg

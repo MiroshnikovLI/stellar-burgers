@@ -2,7 +2,7 @@ import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { IInitialState } from './type';
 
-const initialState: IInitialState = {
+export const initialState: IInitialState = {
   bun: null,
   ingredients: []
 };
@@ -27,13 +27,9 @@ export const burgerConstructorSlice = createSlice({
       })
     },
     removeIngredient: (state, action) => {
-      if (action.payload.type === 'bun') {
-        return;
-      } else {
-        state.ingredients = state.ingredients.filter(
-          (b) => b.id !== action.payload.id
-        );
-      }
+      state.ingredients = state.ingredients.filter(
+        (b) => b.id !== action.payload.id
+      );
     },
     ingredientMoveUp: (state, action) => {
       // Создаем новый массив
