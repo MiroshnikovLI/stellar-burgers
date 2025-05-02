@@ -1,21 +1,52 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { selectAllIngredients } from '../slices/ingredientsSlice';
+import { fetchOrderNumber, selectAllOrders } from '../slices/feedSlice';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { selectUserOrders } from '../slices/userProfileSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
+  const orderAll = useSelector(selectAllOrders);
+  const orderUser = useSelector(selectUserOrders);
+  const dispatch = useDispatch();
+  const orderNumber = useParams();
+  const [orderData, setOrderData] = useState({
     createdAt: '',
-    ingredients: [],
+    ingredients: [''],
     _id: '',
     status: '',
     name: '',
-    updatedAt: 'string',
+    updatedAt: '',
     number: 0
-  };
+  });
 
-  const ingredients: TIngredient[] = [];
+  if (!orderData?.number) {
+    orderAll.forEach((ele) => {
+      if (ele.number === Number(orderNumber.number)) {
+        return setOrderData(ele);
+      }
+    });
+
+    orderUser.forEach((ele) => {
+      if (ele.number === Number(orderNumber.number)) {
+        return setOrderData(ele);
+      }
+    });
+
+    dispatch(fetchOrderNumber(Number(orderNumber.number)))
+      .unwrap()
+      .then((data) => {
+        if (data) {
+          setOrderData(data.orders[0]);
+        }
+      });
+  }
+
+  const ingredients: TIngredient[] = useSelector(selectAllIngredients);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

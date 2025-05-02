@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import {
   Input,
   Button,
@@ -10,6 +10,7 @@ import { RegisterUIProps } from './type';
 
 export const RegisterUI: FC<RegisterUIProps> = ({
   errorText,
+  clearError,
   email,
   setEmail,
   handleSubmit,
@@ -36,7 +37,8 @@ export const RegisterUI: FC<RegisterUIProps> = ({
               name='name'
               error={false}
               errorText=''
-              size='default'
+              size={'default'}
+              required
             />
           </div>
           <div className='pb-6'>
@@ -72,7 +74,11 @@ export const RegisterUI: FC<RegisterUIProps> = ({
       </form>
       <div className={`${styles.question} text text_type_main-default pb-6`}>
         Уже зарегистрированы?
-        <Link to='/login' className={`pl-2 ${styles.link}`}>
+        <Link
+          to='/login'
+          onClick={clearError}
+          className={`pl-2 ${styles.link}`}
+        >
           Войти
         </Link>
       </div>

@@ -1,5 +1,9 @@
 .content {
-  overflow-y: scroll;
+  overflow-y: auto;
+  scrollbar-width: auto;
+  scrollbar-color: auto;
   width: 100%;
   height: 100%;
+  padding: 3px;
+  box-sizing: border-box;
 }

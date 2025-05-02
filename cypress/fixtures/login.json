@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "accessToken": "123",
+  "refreshToken": "123",
+  "user": {
+    "email": "miroshnikov-li@yandex.ru",
+    "name": "Мирошников Дениc"
+  }
+}
